@@ -1,7 +1,9 @@
 <?php 
 
 include './dbConn.php';
+$sql = "SELECT * FROM `users` ";
 
+$op  = mysqli_query($conn, $sql);
 
 
 
@@ -47,18 +49,25 @@ include './dbConn.php';
     </tr>
   </thead>
   <tbody>
+  <?php
+
+while ($result = mysqli_fetch_assoc($op)) {
+
+
+?>
     <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
+      <th scope="row"><?php echo $result['id']; ?></th>
+      <td><?php  echo $result['name']; ?></td>
+      <td><?php  echo $result['email'];?></td>
+      <td><?php echo $result['gender'];?></td>
+      <td><?php  echo $result['status'];?></td>
       <td>
-        <a href="ShowSingleUser.php" data-toggle="tooltip" data-placement="top" title="Show Data Of single User"><img src="img/eye-fill.svg" alt="ShowSingleUserData"></a>
-        <a href="editUser.php" data-toggle="tooltip" data-placement="top" title="Edit Single User"><img src="img/pencil-square.svg" alt="EditSingleUser"></a>
-        <a href="DeleteUser.php" data-toggle="tooltip" data-placement="top" title="delete Single User"><img src="img/trash3-fill.svg" alt="DeleteOneUser"></a>
+        <a href="ShowSingleUser.php?id=<?php echo $result['id']; ?>" data-toggle="tooltip" data-placement="top" title="Show Data Of single User"><img src="img/eye-fill.svg" alt="ShowSingleUserData"></a>
+        <a href="editUser.php?id=<?php echo $result['id']; ?>" data-toggle="tooltip" data-placement="top" title="Edit Single User"><img src="img/pencil-square.svg" alt="EditSingleUser"></a>
+        <a href="DeleteUser.php?id=<?php echo $result['id']; ?>" data-toggle="tooltip" data-placement="top" title="delete Single User"><img src="img/trash3-fill.svg" alt="DeleteOneUser"></a>
     </td>
     </tr>
+  <?php }?>
   </tbody>
 </table>
 </div>

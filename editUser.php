@@ -1,3 +1,50 @@
+<?php 
+
+include './dbConn.php';
+$id ='';
+  
+
+if($_SERVER['REQUEST_METHOD'] == "GET"){
+
+    // LOGIC .... 
+    
+      $id=$_GET['id']; // id of clicked specific user
+     
+    
+} 
+
+if($_SERVER['REQUEST_METHOD']=='POST'){
+    $id=$_POST['id'];
+    $name=$_POST['name'];
+    $email=$_POST['email'];
+    $gender=$_POST['gender'];
+  
+    if(isset($_POST['status'])=='yes'){
+
+    $status=$_POST['status'];
+
+    $sql="UPDATE `users` SET `name`='$name',`email`='$email',`gender`='$gender',`status`='$status' WHERE `id`=". $id;
+    $op = mysqli_query($conn,$sql);
+ 
+    }else{
+        $sql="UPDATE `users` SET `name`='$name',`email`='$email',`gender`='$gender',`status`='no' WHERE `id`=". $id;
+        $op = mysqli_query($conn,$sql);
+
+    }
+
+    if($op){
+        $msg='Data Updated';
+        header('Location: index.php');
+    }else{
+        $msg='error please try again';
+    }
+   
+}
+$sql = "SELECT * FROM `users` where `id` =".$id;
+$op=mysqli_query($conn,$sql);
+$FData = mysqli_fetch_assoc($op);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,6 +62,14 @@
             rel="stylesheet">
 </head>
 <body>
+<div class="container mt-5">
+    <?php if(isset($msg)){?>
+        <div class="alert alert-warning" role="alert">
+    <?php  echo $msg;} ?>
+      </div>
+       
+            
+    </div>
     <div class="container mt-5">
         <h1>Edit User Data</h1>
         <hr>
@@ -23,27 +78,27 @@
         <p class="text-muted">Please fill this form and submit to add user record to the database</p>
     </div>
 <div class="container mt-5">
-        <form  action="addContact"  method="post" class="row g-3">
+        <form  action="editUser.php?id=<?php echo $FData['id'];?>"  method="post" class="row g-3" enctype ="multipart/form-data">
             <div class="col-md-12">
                 <label for="inputName" class="form-label">Name</label>
-                <input type="name" class="form-control" id="inputName" name="name">
+                <input type="name" class="form-control" id="inputName" name="name" value="<?php echo $FData['name'];?>">
             </div>
             <div class="col-md-12">
               <label for="inputEmail4" class="form-label">Email</label>
-              <input type="email" class="form-control" id="inputEmail4" name="email">
+              <input type="email" class="form-control" id="inputEmail4" name="email" value="<?php echo $FData['email']; ?>">
             </div>
             <fieldset class="form-group">
               <div class="row">
                   <legend class="col-form-label col-sm-2 pt-0">Gender <span style="color:red;"></legend>
                   <div class="col-sm-10">
                      <div class="form-check">
-                        <input class="form-check-input" type="radio"  id="gridRadios1"  name="gender" value="female" checked>
+                        <input class="form-check-input" type="radio"  id="gridRadios1"  name="gender" value="<?php if($FData['gender']=='female'){echo $FData['gender']; ?>" checked <?php }?>> 
                         <label class="form-check-label" for="gridRadios1">
                        Female
                         </label>
                      </div>
                       <div class="form-check">
-                      <input class="form-check-input" type="radio" name="gender" id="gridRadios2" value="male">
+                      <input class="form-check-input" type="radio" name="gender" id="gridRadios2" value="<?php if($FData['gender']=='male'){echo $FData['gender'];?>" checked <?php } ?>>
                        <label class="form-check-label" for="gridRadios2">
                        Male
                        </label>
@@ -57,13 +112,14 @@
                     <div class="col-sm-2">
                        <div class="col-sm-10">
                           <div class="form-check">
-                             <input class="form-check-input" name="agree" type="checkbox" id="gridCheck1">
+                             <input class="form-check-input" name="status" type="checkbox" id="gridCheck1" value="<?php if($FData['status']=='yes'){ echo $FData['status']; ?>" checked <?php }?>>
                              <label class="form-check-label" for="gridCheck1">  
                              </label>
                            </div>
                       </div>
                     </div>Receive E-Mails from us 
            </div>
+           <input type="hidden" name="id" value="<?php echo $FData['id'];?>">
             <div class="col-md-11  mt-2">
               <button type="submit" class="btn btn-primary text-white">Edit User</button>
               <a href="index.php" class="btn btn-light text-black">Cancel</a>

@@ -1,3 +1,22 @@
+<?php
+include './dbConn.php';
+
+if($_SERVER['REQUEST_METHOD'] == "GET"){
+
+    // LOGIC .... 
+    
+      $id  =$_GET['id']; // id of clicked specific user
+      $sql = "SELECT * FROM `users` where `id` =".$id;
+      $op=mysqli_query($conn,$sql);
+      $FData = mysqli_fetch_assoc($op);
+} 
+
+
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,12 +43,20 @@
     <div class="container mt-5">
         <div class="row">
               <h3 class="col-4">Name:</h3>
-              <p class="col-8">Laila</p>
+              <p class="col-8"><?php echo $FData['name'];?></p>
               <h3 class="col-4">Email:</h3>
-              <p class="col-8">laila@gmail.com</p>
+              <p class="col-8"><?php echo $FData['email'];?></p>
               <h3 class="col-4">Gender:</h3>
-              <p class="col-8">F</p>
-              <p class="col-12">You will Receive e-mails from us.</p>
+              <p class="col-8"><?php echo $FData['gender'];?></p>
+              <p class="col-12">
+                <?php if($FData['status']=='yes'){ ?>
+              You will Receive e-mails from us.
+              <?php }else{?>
+                You won't Receive e-mails from us.
+                <?php }?>
+            </p>
+            
+
               <a href="index.php" class="btn btn-primary text-white col-2">Back</a>
         </div>
          

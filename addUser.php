@@ -1,3 +1,36 @@
+<?php
+
+include './dbConn.php';
+
+if($_SERVER['REQUEST_METHOD']=='POST'){
+           
+    $name=$_POST['name'];
+    $email=$_POST['email'];
+    $gender=$_POST['gender'];
+   
+    if(isset($_POST['status'])=='yes'){
+       
+        $status=$_POST['status'];
+        $sql1 =  "INSERT INTO `users`( `name`, `email`,`gender`,`status`) VALUES ('$name','$email','$gender','$status')";     
+       
+    }else{
+        
+        $sql1 =  "INSERT INTO `users`( `name`, `email`,`gender`,`status`) VALUES ('$name','$email','$gender','no')";  
+        
+    }
+       
+    $op1 = mysqli_query($conn,$sql1);
+ 
+    if($op1){
+        $msg='Data Inserted';
+    }else{
+        $msg='Error, Please try again';
+    }
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,14 +49,23 @@
 </head>
 <body>
     <div class="container mt-5">
+    <?php if(isset($msg)){?>
+        <div class="alert alert-warning" role="alert">
+    <?php  echo $msg;} ?>
+      </div>
+       
+            
+    </div>
+    <div class="container mt-5">
         <h1>User Registeration Form</h1>
         <hr>
     </div>
     <div class="container mt-5">
         <p class="text-muted">Please fill this form and submit to add user record to the database</p>
+       
     </div>
 <div class="container mt-5">
-        <form  action="addContact"  method="post" class="row g-3">
+        <form  action="<?php echo $_SERVER['PHP_SELF']; ?>"  method="post" class="row g-3" enctype ="multipart/form-data">
             <div class="col-md-12">
                 <label for="inputName" class="form-label">Name</label>
                 <input type="name" class="form-control" id="inputName" name="name">
@@ -57,7 +99,7 @@
                     <div class="col-sm-2">
                        <div class="col-sm-10">
                           <div class="form-check">
-                             <input class="form-check-input" name="agree" type="checkbox" id="gridCheck1">
+                             <input class="form-check-input" name="status" type="checkbox" id="gridCheck1" value="yes">
                              <label class="form-check-label" for="gridCheck1">  
                              </label>
                            </div>
